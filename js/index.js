@@ -59,6 +59,7 @@ function doMultiply () {
     if (sum > 9) {
       let digits = sum.toString().split('');
       let nextArray = sumArrays[a-1]
+      drawLabels(digits[0], boxSize*a-boxSize +boxSize-30, boxSize+30+15)
       nextArray.push(digits[0])
       answers.push(digits[1])
     }
