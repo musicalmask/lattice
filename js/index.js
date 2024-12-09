@@ -10,8 +10,13 @@ function doMultiply () {
   const sizeNum1 = num1.length
   const sizeNum2 = num2.length
   let product
+  let sumArrays=[]
+  const numAdders = sizeNum1 * 2;
+  for (let a = 0; a < numAdders; a++) {
+    sumArrays[a] = []
+  }
+
   for (let i = 0; i < sizeNum1; i++) {
-    
     for (let j = 0; j < sizeNum2; j++) {
       if(i===0){
         drawLabels(num1Array[j], j * boxSize + boxSize, i * boxSize + boxSize)
@@ -22,7 +27,9 @@ function doMultiply () {
       }
       let productArray = product.toString().split('')
       drawLabels(productArray[0],j*boxSize+boxSize,i * boxSize+boxSize+30)
+      sumArrays[j+i].push(productArray[0])
       drawLabels(productArray[1],j*boxSize+boxSize+40,i * boxSize+boxSize+80)
+      sumArrays[j+i+1].push(productArray[1])
       drawBox(j * boxSize + boxSize, i * boxSize + boxSize)
       if(j===sizeNum2-1){
         drawLabels(num2Array[i], j*boxSize+2*boxSize, i*boxSize+1.5*boxSize)
