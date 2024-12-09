@@ -1,7 +1,8 @@
 const myCanvas = document.getElementById('myCanvas')
 const ctx = myCanvas.getContext('2d')
 const boxSize = 80
-function doMultiply () {
+const fontSize = 30
+async function doMultiply () {
   ctx.clearRect(0, 0, myCanvas.width, myCanvas.height)
   const num1 = document.getElementById('num1').value
   const num2 = document.getElementById('num2').value
@@ -19,28 +20,28 @@ function doMultiply () {
   for (let i = 0; i < sizeNum1; i++) {
     for (let j = 0; j < sizeNum2; j++) {
       if (i === 0) {
-        drawLabels(num1Array[j], j * boxSize + boxSize, i * boxSize + boxSize)
+        await drawLabels(num1Array[j], j * boxSize + boxSize, i * boxSize + boxSize)
       }
       product = num1Array[j] * num2Array[i]
       if (product < 10) {
         product = '0' + product.toString()
       }
       let productArray = product.toString().split('')
-      drawLabels(
+      await drawLabels(
         productArray[0],
         j * boxSize + boxSize,
-        i * boxSize + boxSize + 30
+        i * boxSize + boxSize + fontSize
       )
       sumArrays[j + i].push(productArray[0])
-      drawLabels(
+      await drawLabels(
         productArray[1],
         j * boxSize + boxSize + 40,
         i * boxSize + boxSize + 80
       )
       sumArrays[j + i + 1].push(productArray[1])
-      drawBox(j * boxSize + boxSize, i * boxSize + boxSize)
+      await drawBox(j * boxSize + boxSize, i * boxSize + boxSize)
       if (j === sizeNum2 - 1) {
-        drawLabels(
+        await drawLabels(
           num2Array[i],
           j * boxSize + 2 * boxSize,
           i * boxSize + 1.5 * boxSize
@@ -59,7 +60,7 @@ function doMultiply () {
     if (sum > 9) {
       let digits = sum.toString().split('');
       let nextArray = sumArrays[a-1]
-      drawLabels(digits[0], boxSize*a-boxSize +boxSize-30, boxSize+30+15)
+      await drawLabels(digits[0], boxSize*a-boxSize +boxSize-fontSize, boxSize+fontSize+fontSize/2, 20)
       nextArray.push(digits[0])
       answers.push(digits[1])
     }
@@ -69,15 +70,16 @@ function doMultiply () {
   }
   for(let c=0;c< answers.length;c++) {
     if (c<answers.length/2) {
-      drawLabels(answers[c],boxSize*(answers.length/2-c),boxSize*(answers.length/2)+boxSize+30)
+      await drawLabels(answers[c],boxSize*(answers.length/2-c),boxSize*(answers.length/2)+boxSize+fontSize)
     }
     else{
-      drawLabels(answers[c],boxSize-30,boxSize*(answers.length-c)+boxSize)
+      await drawLabels(answers[c],boxSize-fontSize,boxSize*(answers.length-c)+boxSize)
     }
   }
 }
 
-function drawBox (x, y) {
+async function drawBox (x, y) {
+  await waitForTime()
   ctx.moveTo(x, y)
   ctx.lineTo(x, boxSize + y)
   ctx.lineTo(boxSize + x, boxSize + y)
@@ -86,19 +88,20 @@ function drawBox (x, y) {
   ctx.lineTo(x, boxSize + y)
   ctx.lineTo(boxSize + x, y)
   ctx.moveTo(boxSize + x, y)
-  ctx.lineTo(x - 30, boxSize + 30 + y)
+  ctx.lineTo(x - fontSize, boxSize + fontSize + y)
   ctx.stroke()
 }
 
-function drawLabels (value, x, y) {
-  ctx.font = '30px Arial'
+async function drawLabels (value, x, y, font = fontSize) {
+  await waitForTime()
+  ctx.font = font+'px Arial'
   ctx.strokeText(value, x, y)
 }
 
-function countDigits (num) {
-  // Convert the number to a string
-  const numStr = Math.abs(num).toString()
-
-  // Return the length of the string
-  return numStr.length
+async function waitForTime(ms=400) {
+  return new Promise(resolve => {
+      setTimeout(() => {
+          resolve();
+      }, ms);
+  });
 }
